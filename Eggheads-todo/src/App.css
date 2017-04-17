@@ -2,16 +2,20 @@
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.App-header {
+  background-color: #eee;
+  width: 20rem;
+  margin: 2rem auto 0 auto;
+  box-sizing: border-box;
+  padding: 20px 20px 0px 20px;
+  color: black;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+h2 {
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 .App-intro {
@@ -24,45 +28,116 @@
 }
 
 .Todo-App {
-  padding-top: 20px;
   display: inline-block;
   text-align: left;
+  width: 20rem;
+}
+
+form {
+  margin: 0;
+  padding: 0;
 }
 
 input {
-  font-size: 20px;
+  font-size: 1.5rem;
+  width: 20rem;
+  padding: 1rem 1rem;
+  box-sizing: border-box;
+  border-style: none;
+  border: 1px solid rgb(150, 150, 150);
+  border-bottom: none;
 }
 
 ul {
   padding: 0px;
+  margin: 0;
+  width: 20rem;
 }
 
 li {
+  outline-color: black;
   list-style-type: none;
+  background-color: #eee;
+  padding: 1rem;
+  font-size: 1.5rem;
+  transition: 0.5s background-color ease;
+  box-sizing: border-box;
+  border: 1px solid rgb(150, 150, 150);
+  border-bottom: none;
 }
 
-li span.delete-item {
-  visibility: hidden;
+li span.delete-item a {
+  opacity: 0.2;
 }
+
+li.complete {
+  background-color: rgb(181, 226, 168);
+}
+
 
 span.delete-item a {
   text-decoration: none;
+  font-size: 1.8rem;
+  margin-right: .5rem;
   color: red;
 }
 
-li:hover span.delete-item {
-  visibility: visible;
+li:focus span.delete-item a, li:hover span.delete-item a,
+span.delete-item a:focus, span.delete-item a:hover {
+  opacity: 1;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+}
+
+.Todo-message {
+  background-color: #eee;
+  padding: .3rem .2rem .7rem .2rem;
+  height: 1.5rem;
+  font-size: 1rem;
+  text-align: center;
 }
 
 .error {
   color: red;
 }
 
+.success {
+  color: green;
+  display: inline-block;
+}
+
+.footer {
+  text-align: center;
+  width: 100%;
+  margin: 0 auto 2rem auto;
+  font-size: 0;
+  border-top: 1px solid rgb(150, 150, 150);  
+}
+
 .footer a {
-  padding-left: 2px;
-  padding-right: 2px;
+  font-size: 1rem;
+  padding: 1rem .2rem;
+  display: inline-block;
+  background-color: #eee;
+  box-sizing: border-box;
+  width: 33.3%;
+  text-decoration: none;
+  color: black;
 }
 
 .footer a.active {
   font-weight: bold;
+  background-color: rgb(93, 85, 81);
+  color: white;
+}
+
+.footer a:last-child {
+  border-bottom-right-radius: 1rem;
+}
+
+.footer a:first-child {
+  border-bottom-left-radius: 1rem;
 }

@@ -1,18 +1,14 @@
 import React, { Component } from 'react'
-import logo from './logo.svg'
 import './App.css'
 import {TodoForm, TodoList, Footer} from './components/todo'
-import {addTodo, generateId, findById, toggleTodo, updateTodo, removeTodo, filterTodos} from './lib/todoHelpers'
+import {addTodo, generateId, findById, newId, toggleTodo, updateTodo, updateTodoId, removeTodo, filterTodos} from './lib/todoHelpers'
 import {pipe, partial} from './lib/utils'
 import PropTypes from 'prop-types'
+import {loadTodos, createTodo, saveTodo, deleteTodo} from './lib/todoService'
 
 class App extends Component {
   state = {
-    todos: [
-      {id: 1, name: 'Learn JSX', isComplete: true},
-      {id: 2, name: 'Build an app', isComplete: false},
-      {id: 3, name: 'Ship it', isComplete: false}
-    ],
+    todos: [],
     currentTodo: ''
   }
 
@@ -20,14 +16,34 @@ class App extends Component {
     route: PropTypes.string
   }
 
-  handleRemove = (id, event) => {
-    event.preventDefault()
-    const updatedTodos = removeTodo(this.state.todos, id)
-    this.setState({ todos: updatedTodos })
+  componentDidMount() {
+    loadTodos()
+      .then(({todos}) => this.setState({todos}))
   }
 
-  handleToggle = (id) => {
-    const getUpdatedTodos = pipe(findById, toggleTodo, partial(updateTodo, this.state.todos));
+  handleRemove = (id, event) => {
+    event.preventDefault()
+    event.stopPropagation()
+    const updatedTodos = removeTodo(this.state.todos, id)
+    this.setState({ todos: updatedTodos })
+    deleteTodo(id)
+      .then(() => this.showTempMessage('Todo removed'))
+  }
+
+  handleToggle = (id, key) => {
+    if (key.charCode && key.charCode !== 13) { return }
+
+    const getToggledTodo = pipe(findById, toggleTodo)
+    const updated = getToggledTodo(id, this.state.todos)
+    const getUpdatedTodos = partial(updateTodo, this.state.todos)
+    const updatedTodos = getUpdatedTodos(updated)
+    this.setState({ todos: updatedTodos })
+    saveTodo(updated)
+      .then(() => this.showTempMessage('Todo updated'))
+  }
+
+  handleReplaceId = (id, dbId) => {
+    const getUpdatedTodos = pipe(findById, partial(newId, dbId), partial(updateTodoId, this.state.todos, id))
     const updatedTodos = getUpdatedTodos(id, this.state.todos)
     this.setState({ todos: updatedTodos })
   }
@@ -41,15 +57,33 @@ class App extends Component {
     this.setState({
       todos: updateTodos,
       currentTodo: '',
-      errorMessage: '',
     })
+    createTodo(newTodo)
+      .then(({ id }) => {
+        this.handleReplaceId(newId, id)
+        this.showTempMessage('Todo added')
+      })
+  }
+
+  showTempMessage = (msg) => {
+    this.setState({
+      message: msg,
+      errorMessage: ''
+    })
+    setTimeout(() => this.setState({ message: '' }), 2500)
+  }
+
+  showErrorMessage = (msg) => {
+    this.setState({
+      message: '',
+      errorMessage: msg
+    })
+    setTimeout(() => this.setState({ errorMessage: '' }), 2500)
   }
 
   handleEmptySubmit = (event) => {
     event.preventDefault()
-    this.setState({
-      errorMessage: 'Please supply a todo name'
-    })
+    this.showErrorMessage('Please supply a todo text')
   }
 
   handleInputChange = (event) => {
@@ -66,11 +100,13 @@ class App extends Component {
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           <h2>React Todos</h2>
         </div>
         <div className="Todo-App">
-          {this.state.errorMessage && <span className='error'>{this.state.errorMessage}</span>}
+          <div className="Todo-message">
+            {this.state.message && <span className='success'>{this.state.message}</span>}
+            {this.state.errorMessage && <span className='error'>{this.state.errorMessage}</span>}
+          </div>
           <TodoForm handleInputChange={this.handleInputChange}
             currentTodo={this.state.currentTodo}
             handleSubmit={submitHandler}/>

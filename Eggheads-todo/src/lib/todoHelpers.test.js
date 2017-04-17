@@ -1,4 +1,4 @@
-import {addTodo, findById, toggleTodo, updateTodo, removeTodo, filterTodos} from './todoHelpers'
+import {addTodo, findById, toggleTodo, newId, updateTodo, updateTodoId, removeTodo, filterTodos} from './todoHelpers'
 
 test('addTodo should add the passed todo to the list', () => {
   const startTodos = [
@@ -43,6 +43,19 @@ test('toggleTodo should not mutate the original todo', () => {
   expect(result).not.toBe(startTodo)
 })
 
+test('newId should swap the id prop of a todo', () => {
+  const startTodo = {id:2, name: 'two', isComplete: false}
+  const expected = {id:3, name: 'two', isComplete: false}
+  const result = newId(3, startTodo)
+  expect(result).toEqual(expected)
+})
+
+test('newId should not mutate the original todo', () => {
+  const startTodo = {id:2, name: 'two', isComplete: false}
+  const result = newId(3, startTodo)
+  expect(result).not.toBe(startTodo)
+})
+
 test('updateTodo should update an item by id', () => {
   const startTodos = [
     {id:1, name: 'one', isComplete: false},
@@ -70,6 +83,37 @@ test('updateTodo should not mutate the original array', () => {
   const updatedTodo = {id:2, name: 'two', isComplete: true}
 
   const result = updateTodo(startTodos, updatedTodo)
+
+  expect(result).not.toBe(startTodos)
+})
+
+test('updateTodoId should update an item by id', () => {
+  const startTodos = [
+    {id:1, name: 'one', isComplete: false},
+    {id:2, name: 'two', isComplete: false},
+    {id:3, name: 'three', isComplete: false}
+  ]
+  const updatedTodo = {id:1, name: 'one', isComplete: true}
+  const expectedTodos = [
+    {id:1, name: 'one', isComplete: true},
+    {id:2, name: 'two', isComplete: false},
+    {id:3, name: 'three', isComplete: false}
+  ]
+
+  const result = updateTodoId(startTodos, 1, updatedTodo)
+
+  expect(result).toEqual(expectedTodos)
+})
+
+test('updateTodoId should not mutate the original array', () => {
+  const startTodos = [
+    {id:1, name: 'one', isComplete: false},
+    {id:2, name: 'two', isComplete: false},
+    {id:3, name: 'three', isComplete: false}
+  ]
+  const updatedTodo = {id:1, name: 'one', isComplete: true}
+
+  const result = updateTodoId(startTodos, updatedTodo)
 
   expect(result).not.toBe(startTodos)
 })
