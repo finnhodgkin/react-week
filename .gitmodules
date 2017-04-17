@@ -1,3 +1,6 @@
 [submodule "Todo-PostGres"]
 	path = Todo-PostGres
 	url = git@github.com:finnhodgkin/Todo-PostGres.git
+[submodule "PostGres-React-Todos"]
+	path = PostGres-React-Todos
+	url = git@github.com:finnhodgkin/Todo-PostGres.git
