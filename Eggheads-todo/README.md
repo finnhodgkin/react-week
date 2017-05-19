@@ -1,1 +1,1 @@
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+To See a live version visit [this page](https://react-week-todos.herokuapp.com/)
